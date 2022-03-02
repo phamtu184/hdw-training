@@ -1,8 +1,11 @@
 import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import { useAppSelector } from 'app/hooks';
+import { selectLogged } from 'features/auth/authSlice';
+import Header from 'components/Header';
 
 const Layout: React.FC = () => {
-    const auth = false;
+    const auth = useAppSelector(selectLogged);
     if (!auth) {
         return (
             <div>
@@ -12,14 +15,7 @@ const Layout: React.FC = () => {
     }
     return (
         <div>
-            <ul>
-                <li>
-                    <Link to="/login">Login Page</Link>
-                </li>
-                <li>
-                    <Link to="/">Home Page</Link>
-                </li>
-            </ul>
+            <Header />
             <Outlet />
         </div>
     );

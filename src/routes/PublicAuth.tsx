@@ -1,8 +1,10 @@
 import React from 'react';
 import { useLocation, Navigate } from 'react-router-dom';
+import { useAppSelector } from 'app/hooks';
+import { selectLogged } from 'features/auth/authSlice';
 
 function PublicAuth({ children }: any) {
-    const auth = false;
+    const auth = useAppSelector(selectLogged);
     const location = useLocation();
 
     if (auth) {

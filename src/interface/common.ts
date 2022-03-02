@@ -18,8 +18,9 @@ export interface IListParams<> {
     [key: string]: any;
 }
 
-export interface IErrorResponse<> {
+export interface IResponseData<> {
     status: number;
     error: boolean;
     message: string;
+    data?: any;
 }

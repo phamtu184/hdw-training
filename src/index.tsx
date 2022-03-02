@@ -7,11 +7,13 @@ import { BrowserRouter } from 'react-router-dom';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
 import { CssBaseline } from '@mui/material';
+import NavigateSetter from 'routes/NavigateSetter';
 
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <BrowserRouter>
+                <NavigateSetter />
                 <CssBaseline />
                 <App />
             </BrowserRouter>
