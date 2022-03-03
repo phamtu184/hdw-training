@@ -55,6 +55,19 @@ export const employeeSlice = createSlice({
         deleteEmployeeFail(state, _action: PayloadAction<IResponseData>) {
             state.loading = false;
         },
+        editEmployee(state, _action: PayloadAction<IEmployee>) {
+            state.loading = true;
+        },
+        editEmployeeSuccess(state, action: PayloadAction<IEmployee>) {
+            const index = state.list.findIndex((em) => em.id === action.payload.id);
+            if (index > -1) {
+                state.list.splice(index, 1, action.payload);
+            }
+            state.loading = false;
+        },
+        editEmployeeFail(state, _action: PayloadAction<IResponseData>) {
+            state.loading = false;
+        },
         clearEmployee(state) {
             state.loading = false;
             state.list = [];

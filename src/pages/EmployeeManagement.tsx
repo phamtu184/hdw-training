@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from 'app/hooks';
 import AddEditEmployeeDialog from 'components/employee/AddEditDialog';
 import CustomAppTable from 'components/Table';
 import { FORM_MODE } from 'constants/employee';
+import { appActions } from 'features/app/appSlice';
 import { employeeActions, selectEmployeeList, selectEmployeeLoading } from 'features/employee/employeeSlice';
 import { IEmployee } from 'interface';
 import React, { useEffect } from 'react';
@@ -53,25 +54,38 @@ const EmployeePage: React.FC = () => {
         };
     }, []);
 
-    const [openDialog, setOpenDialog] = React.useState(false);
+    const [openDialog, setOpenDialog] = React.useState<boolean>(false);
     const [mode, setMode] = React.useState(FORM_MODE.ADD);
+    const [defaultValue, setDefaultValue] = React.useState<IEmployee | null>(null);
 
     const handleClickOpenDialog = (employeeData: IEmployee | null) => {
         if (employeeData === null) {
             setMode(FORM_MODE.ADD);
+            setDefaultValue(null);
         }
         setOpenDialog(true);
     };
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
+        setDefaultValue(null);
     };
     const handleEdit = (data: IEmployee) => {
-        console.log('handleEdit', data);
+        setMode(FORM_MODE.EDIT);
+        setOpenDialog(true);
+        setDefaultValue(data);
     };
     const handleDelete = (data: IEmployee) => {
-        console.log('handleDelete', data);
         dispatch(employeeActions.deleteEmployee(data));
+        // const payload = {
+        //     title: 'Delete',
+        //     content: 'Are you sure to delete this employee?',
+        //     onOk: () => {
+        //         dispatch(employeeActions.deleteEmployee(data));
+        //     },
+        //     onCancel: () => null,
+        // };
+        // dispatch(appActions.openConfirm(payload));
     };
     return (
         <div>
@@ -86,7 +100,12 @@ const EmployeePage: React.FC = () => {
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
             ></CustomAppTable>
-            <AddEditEmployeeDialog open={openDialog} handleClose={handleCloseDialog} mode={mode} />
+            <AddEditEmployeeDialog
+                open={openDialog}
+                handleClose={handleCloseDialog}
+                mode={mode}
+                defaultValue={defaultValue}
+            />
         </div>
     );
 };

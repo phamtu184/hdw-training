@@ -32,8 +32,18 @@ function* deleteEmployee(action: PayloadAction<IEmployee>) {
     }
 }
 
+function* editEmployee(action: PayloadAction<IEmployee>) {
+    try {
+        yield call(employeeApi.update, action.payload);
+        yield put(employeeActions.editEmployeeSuccess(action.payload));
+    } catch (error: any) {
+        yield put(employeeActions.editEmployeeFail(error));
+    }
+}
+
 export default function* employeeSaga() {
     yield takeLatest(employeeActions.fetchEmployeeList, fetchEmployeeList);
     yield takeLatest(employeeActions.addEmployee, addEmployee);
     yield takeLatest(employeeActions.deleteEmployee, deleteEmployee);
+    yield takeLatest(employeeActions.editEmployee, editEmployee);
 }

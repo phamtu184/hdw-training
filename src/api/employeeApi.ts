@@ -18,7 +18,7 @@ const employeeApi = {
     },
 
     update(data: IEmployee): Promise<IEmployee> {
-        const url = '/employees';
+        const url = '/employees/' + data.id;
         return axiosClient.patch(url, data);
     },
 

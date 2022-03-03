@@ -9,7 +9,7 @@ import {
     Select,
     MenuItem,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import employeeSchema from 'validationForm/employeeSchema';
 import { IEmployee } from 'interface';
@@ -24,29 +24,46 @@ interface Props {
     open: boolean;
     handleClose: () => void;
     mode: FORM_MODE;
+    defaultValue?: IEmployee | null;
 }
-const AddEditEmployeeDialog: React.FC<Props> = ({ handleClose, open, mode }) => {
+const AddEditEmployeeDialog: React.FC<Props> = ({ handleClose, open, mode, defaultValue }) => {
     const {
         register,
         handleSubmit,
         control,
+        setValue,
         formState: { errors },
     } = useForm<IEmployee>({
         resolver: yupResolver(employeeSchema),
     });
     const dispatch = useAppDispatch();
 
+    useEffect(() => {
+        if (open && defaultValue) {
+            setValue('name', defaultValue.name);
+            setValue('gender', defaultValue.gender);
+            setValue('birthDate', defaultValue.birthDate);
+            setValue('salary', defaultValue.salary);
+        } else if (!defaultValue) {
+            setValue('name', '');
+            setValue('gender', 'male');
+            setValue('birthDate', new Date());
+            setValue('salary', 0);
+        }
+    }, [defaultValue, open]);
+
     const handleAddEdit: SubmitHandler<IEmployee> = (data) => {
         if (mode === FORM_MODE.ADD) {
             dispatch(employeeActions.addEmployee(data));
         } else if (mode === FORM_MODE.EDIT) {
+            dispatch(employeeActions.editEmployee({ ...data, id: defaultValue?.id || '' }));
         }
         handleClose();
     };
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
             <form onSubmit={handleSubmit(handleAddEdit)}>
-                <DialogTitle>Subscribe</DialogTitle>
+                <DialogTitle>{mode === FORM_MODE.ADD ? 'Add' : 'Edit'}</DialogTitle>
                 <DialogContent style={{ paddingTop: '20px' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={12}>
@@ -64,7 +81,7 @@ const AddEditEmployeeDialog: React.FC<Props> = ({ handleClose, open, mode }) => 
                                 select
                                 fullWidth
                                 label="Gender"
-                                defaultValue=""
+                                defaultValue={'male'}
                                 inputProps={register('gender')}
                                 error={errors.gender?.message ? true : false}
                                 helperText={errors.gender?.message}
