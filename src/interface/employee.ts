@@ -1,8 +1,8 @@
 export interface IEmployee {
-    id?: string;
+    id?: string | number;
     name: string;
     gender: 'male' | 'female';
-    age: number;
+    birthDate: Date;
     salary: number;
     createdAt?: number;
     updatedAt?: number;

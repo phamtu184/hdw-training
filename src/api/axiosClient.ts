@@ -1,10 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-const access_token = localStorage.getItem('access_token');
 const axiosClient = axios.create({
     baseURL: 'http://localhost:3001/api',
     headers: {
         'Content-Type': 'application/json',
-        authorization: `Bearer ${access_token ? access_token : null}`,
     },
 });
 
@@ -12,6 +10,10 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
     function (config: AxiosRequestConfig) {
         // Do something before request is sent
+        const access_token = localStorage.getItem('access_token');
+        if (access_token) {
+            config.headers!.authorization = `Bearer ${access_token}`;
+        }
         return config;
     },
     function (error) {

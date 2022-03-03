@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './App.scss';
 import { Route, Routes } from 'react-router-dom';
-import Layout from 'routes/Layout';
+import Layout from 'Layout';
 import RequireAuth from 'routes/RequireAuth';
 import PublicAuth from 'routes/PublicAuth';
 import { privateRoutes, publicRoutes } from 'routes/routesConfig';
@@ -19,7 +19,7 @@ function App() {
         }
     }, []);
     return (
-        <div>
+        <>
             {isAuthen ? (
                 <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
                     <Box
@@ -68,7 +68,7 @@ function App() {
                     </Route>
                 </Routes>
             )}
-        </div>
+        </>
     );
 }
 export default App;

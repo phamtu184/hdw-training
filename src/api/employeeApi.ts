@@ -22,7 +22,7 @@ const employeeApi = {
         return axiosClient.patch(url, data);
     },
 
-    remove(id: string): Promise<IListResponse<IEmployee>> {
+    remove(id: string | number): Promise<any> {
         const url = '/employees/' + id;
         return axiosClient.delete(url);
     },

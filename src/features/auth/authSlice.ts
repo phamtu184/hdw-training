@@ -23,7 +23,7 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        checkAuth(state, action: PayloadAction<string>) {
+        checkAuth(state, _action: PayloadAction<string>) {
             state.isAuthen = true;
         },
         checkAuthSuccess(state, action: PayloadAction<IUser>) {
@@ -34,7 +34,7 @@ export const authSlice = createSlice({
         checkAuthFail(state) {
             state.isAuthen = false;
         },
-        login(state, action: PayloadAction<LoginFormValues>) {
+        login(state, _action: PayloadAction<LoginFormValues>) {
             state.logging = true;
             state.errorMsg = '';
         },
