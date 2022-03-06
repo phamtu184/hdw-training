@@ -8,6 +8,7 @@ import { privateRoutes, publicRoutes } from 'routes/routesConfig';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { authActions, selectIsAuthen } from 'features/auth/authSlice';
 import { Backdrop, Box, CircularProgress, Typography } from '@mui/material';
+import NotFoundPage from 'pages/NotFound';
 
 function App() {
     const dispatch = useAppDispatch();
@@ -66,6 +67,7 @@ function App() {
                             );
                         })}
                     </Route>
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             )}
         </>

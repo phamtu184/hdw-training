@@ -1,14 +1,5 @@
-import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    TextField,
-    DialogActions,
-    Button,
-    Grid,
-    Select,
-    MenuItem,
-} from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Grid, MenuItem } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import React, { useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import employeeSchema from 'validationForm/employeeSchema';
@@ -17,8 +8,8 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/lab';
 import DateMomentUtils from '@date-io/moment';
 import { FORM_MODE } from 'constants/employee';
-import { useAppDispatch } from 'app/hooks';
-import { employeeActions } from 'features/employee/employeeSlice';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { employeeActions, selectEmployeeLoading } from 'features/employee/employeeSlice';
 
 interface Props {
     open: boolean;
@@ -33,12 +24,15 @@ const AddEditEmployeeDialog: React.FC<Props> = ({ handleClose, open, mode, defau
         control,
         setValue,
         formState: { errors },
+        clearErrors,
     } = useForm<IEmployee>({
         resolver: yupResolver(employeeSchema),
     });
     const dispatch = useAppDispatch();
+    const loading = useAppSelector(selectEmployeeLoading);
 
     useEffect(() => {
+        clearErrors();
         if (open && defaultValue) {
             setValue('name', defaultValue.name);
             setValue('gender', defaultValue.gender);
@@ -58,10 +52,9 @@ const AddEditEmployeeDialog: React.FC<Props> = ({ handleClose, open, mode, defau
         } else if (mode === FORM_MODE.EDIT) {
             dispatch(employeeActions.editEmployee({ ...data, id: defaultValue?.id || '' }));
         }
-        handleClose();
     };
     return (
-        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+        <Dialog open={open} fullWidth maxWidth="sm">
             <form onSubmit={handleSubmit(handleAddEdit)}>
                 <DialogTitle>{mode === FORM_MODE.ADD ? 'Add' : 'Edit'}</DialogTitle>
                 <DialogContent style={{ paddingTop: '20px' }}>
@@ -131,9 +124,9 @@ const AddEditEmployeeDialog: React.FC<Props> = ({ handleClose, open, mode, defau
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit" variant="contained">
+                    <LoadingButton type="submit" variant="contained" loading={loading}>
                         Submit
-                    </Button>
+                    </LoadingButton>
                 </DialogActions>
             </form>
         </Dialog>

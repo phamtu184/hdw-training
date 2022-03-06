@@ -1,25 +1,55 @@
+import { LoadingButton } from '@mui/lab';
 import { Button, Dialog, DialogContent, DialogTitle, DialogActions } from '@mui/material';
-import { useAppDispatch, useAppSelector } from 'app/hooks';
-import { appActions, selectConfirm } from 'features/app/appSlice';
-import * as React from 'react';
+import React, { useState } from 'react';
 
-const ConfirmDialog: React.FC = () => {
-    const confirm = useAppSelector(selectConfirm);
+interface IConfirm {
+    open?: boolean;
+    title: string;
+    content: string;
+    onOk?: () => void | null;
+    onCancel?: () => void | null;
+}
+const initialState: IConfirm = {
+    open: false,
+    title: '',
+    content: '',
+    onOk: () => null,
+    onCancel: () => null,
+};
+export function useConfirmHook() {
+    const [confirm, setConfirm] = useState(initialState);
+
+    const openConfirm = (action: IConfirm) => {
+        setConfirm({
+            open: true,
+            title: action.title,
+            content: action.content,
+            onOk: action.onOk,
+            onCancel: action.onCancel,
+        });
+    };
+    const closeConfirm = () => {
+        setConfirm(initialState);
+    };
+    return { openConfirm, closeConfirm, confirm };
+}
+interface IProps {
+    confirm: IConfirm;
+    loading?: boolean;
+}
+const ConfirmDialog: React.FC<IProps> = ({ confirm, loading = false }) => {
     const { title, content, open, onCancel, onOk } = confirm;
-    const dispatch = useAppDispatch();
 
     const handleCancel = () => {
         if (onCancel) {
             onCancel();
         }
-        dispatch(appActions.closeConfirm());
     };
 
     const handleOk = () => {
         if (onOk) {
             onOk();
         }
-        dispatch(appActions.closeConfirm());
     };
 
     return (
@@ -30,7 +60,9 @@ const ConfirmDialog: React.FC = () => {
                 <Button autoFocus onClick={handleCancel}>
                     Cancel
                 </Button>
-                <Button onClick={handleOk}>Ok</Button>
+                <LoadingButton onClick={handleOk} loading={loading}>
+                    Ok
+                </LoadingButton>
             </DialogActions>
         </Dialog>
     );

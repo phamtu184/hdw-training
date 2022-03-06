@@ -17,8 +17,8 @@ const employeeSchema = yup
         salary: yup
             .number()
             .required('This field is required')
-            .min(100000, 'Must be greater than 100000')
-            .max(1000000000, 'Must be less than 1000000000'),
+            .min(100000, 'Must be greater than 100.000')
+            .max(1000000000, 'Must be less than 1.000.000.000'),
     })
     .required();
 export default employeeSchema;

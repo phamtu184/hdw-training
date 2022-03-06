@@ -4,11 +4,13 @@ import { IEmployee, IListParams, IListResponse, IPagination, IResponseData } fro
 
 export interface IEmployeeState {
     loading: boolean;
+    openDialog: boolean;
     list: IEmployee[];
     pagination: IPagination;
 }
 const initialState: IEmployeeState = {
     loading: false,
+    openDialog: false,
     list: [],
     pagination: {
         _page: 1,
@@ -77,6 +79,12 @@ export const employeeSlice = createSlice({
                 _total: 0,
             };
         },
+        openEmployeeDialog(state) {
+            state.openDialog = true;
+        },
+        closeEmployeeDialog(state) {
+            state.openDialog = false;
+        },
     },
 });
 // actions
@@ -85,5 +93,6 @@ export const employeeActions = employeeSlice.actions;
 export const selectEmployeeList = (state: RootState) => state.employee.list;
 export const selectEmployeeLoading = (state: RootState) => state.employee.loading;
 export const selectEmployeePagination = (state: RootState) => state.employee.pagination;
+export const selectOpenEmployeeDialog = (state: RootState) => state.employee.openDialog;
 // reducer
 export default employeeSlice.reducer;

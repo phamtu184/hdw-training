@@ -1,10 +1,15 @@
 import { LoadingButton } from '@mui/lab';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
+import ConfirmDialog, { useConfirmHook } from 'components/ConfirmDialog';
 import AddEditEmployeeDialog from 'components/employee/AddEditDialog';
 import CustomAppTable from 'components/Table';
 import { FORM_MODE } from 'constants/employee';
-import { appActions } from 'features/app/appSlice';
-import { employeeActions, selectEmployeeList, selectEmployeeLoading } from 'features/employee/employeeSlice';
+import {
+    employeeActions,
+    selectEmployeeList,
+    selectEmployeeLoading,
+    selectOpenEmployeeDialog,
+} from 'features/employee/employeeSlice';
 import { IEmployee } from 'interface';
 import React, { useEffect } from 'react';
 interface Column {
@@ -43,6 +48,7 @@ const EmployeePage: React.FC = () => {
     const dispatch = useAppDispatch();
     const employeeList = useAppSelector(selectEmployeeList);
     const loading = useAppSelector(selectEmployeeLoading);
+    const openDialog = useAppSelector(selectOpenEmployeeDialog);
     useEffect(() => {
         const listParams = {
             _page: 1,
@@ -54,45 +60,44 @@ const EmployeePage: React.FC = () => {
         };
     }, []);
 
-    const [openDialog, setOpenDialog] = React.useState<boolean>(false);
     const [mode, setMode] = React.useState(FORM_MODE.ADD);
     const [defaultValue, setDefaultValue] = React.useState<IEmployee | null>(null);
+    const { openConfirm, confirm, closeConfirm } = useConfirmHook();
 
     const handleClickOpenDialog = (employeeData: IEmployee | null) => {
         if (employeeData === null) {
             setMode(FORM_MODE.ADD);
             setDefaultValue(null);
         }
-        setOpenDialog(true);
+        dispatch(employeeActions.openEmployeeDialog());
     };
 
     const handleCloseDialog = () => {
-        setOpenDialog(false);
-        setDefaultValue(null);
+        dispatch(employeeActions.closeEmployeeDialog());
     };
     const handleEdit = (data: IEmployee) => {
         setMode(FORM_MODE.EDIT);
-        setOpenDialog(true);
+        dispatch(employeeActions.openEmployeeDialog());
         setDefaultValue(data);
     };
     const handleDelete = (data: IEmployee) => {
-        dispatch(employeeActions.deleteEmployee(data));
-        // const payload = {
-        //     title: 'Delete',
-        //     content: 'Are you sure to delete this employee?',
-        //     onOk: () => {
-        //         dispatch(employeeActions.deleteEmployee(data));
-        //     },
-        //     onCancel: () => null,
-        // };
-        // dispatch(appActions.openConfirm(payload));
+        const payload = {
+            title: 'Delete',
+            content: `Are you sure to delete ${data.name} employee?`,
+            onOk: () => {
+                dispatch(employeeActions.deleteEmployee(data));
+                closeConfirm();
+            },
+            onCancel: closeConfirm,
+        };
+        openConfirm(payload);
     };
     return (
         <div>
-            This is Employee management page
             <LoadingButton variant="contained" onClick={() => handleClickOpenDialog(null)}>
                 Add
             </LoadingButton>
+            <ConfirmDialog confirm={confirm} loading={loading} />
             <CustomAppTable
                 rows={employeeList}
                 columns={columns}

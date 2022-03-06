@@ -15,15 +15,18 @@ function* fetchEmployeeList(action: PayloadAction<IListParams>) {
 }
 
 function* addEmployee(action: PayloadAction<IEmployee>) {
+    yield delay(1000);
     try {
         const response: IEmployee = yield call(employeeApi.add, action.payload);
         yield put(employeeActions.addEmployeeSuccess(response));
     } catch (error: any) {
         yield put(employeeActions.addEmployeeFail(error));
     }
+    yield put(employeeActions.closeEmployeeDialog());
 }
 
 function* deleteEmployee(action: PayloadAction<IEmployee>) {
+    yield delay(1000);
     try {
         yield call(employeeApi.remove, action.payload?.id ?? '');
         yield put(employeeActions.deleteEmployeeSuccess(action.payload));
@@ -33,12 +36,14 @@ function* deleteEmployee(action: PayloadAction<IEmployee>) {
 }
 
 function* editEmployee(action: PayloadAction<IEmployee>) {
+    yield delay(1000);
     try {
         yield call(employeeApi.update, action.payload);
         yield put(employeeActions.editEmployeeSuccess(action.payload));
     } catch (error: any) {
         yield put(employeeActions.editEmployeeFail(error));
     }
+    yield put(employeeActions.closeEmployeeDialog());
 }
 
 export default function* employeeSaga() {
