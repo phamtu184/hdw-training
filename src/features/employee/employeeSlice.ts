@@ -13,8 +13,8 @@ const initialState: IEmployeeState = {
     openDialog: false,
     list: [],
     pagination: {
-        _page: 1,
-        _limit: 15,
+        _page: 0,
+        _limit: 3,
         _total: 0,
     },
 };
@@ -76,11 +76,6 @@ export const employeeSlice = createSlice({
         clearEmployee(state) {
             state.loading = false;
             state.list = [];
-            state.pagination = {
-                _page: 1,
-                _limit: 15,
-                _total: 0,
-            };
         },
         openEmployeeDialog(state) {
             state.openDialog = true;

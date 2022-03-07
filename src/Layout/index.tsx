@@ -18,7 +18,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 const Layout: React.FC = () => {
     const auth = useAppSelector(selectLogged);
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);

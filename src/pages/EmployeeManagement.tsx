@@ -8,6 +8,7 @@ import {
     employeeActions,
     selectEmployeeList,
     selectEmployeeLoading,
+    selectEmployeePagination,
     selectOpenEmployeeDialog,
 } from 'features/employee/employeeSlice';
 import { IEmployee } from 'interface';
@@ -49,12 +50,10 @@ const EmployeePage: React.FC = () => {
     const employeeList = useAppSelector(selectEmployeeList);
     const loading = useAppSelector(selectEmployeeLoading);
     const openDialog = useAppSelector(selectOpenEmployeeDialog);
+    const pagination = useAppSelector(selectEmployeePagination);
+
     useEffect(() => {
-        const listParams = {
-            _page: 1,
-            _limit: 10,
-        };
-        dispatch(employeeActions.fetchEmployeeList(listParams));
+        handleFetchEmployee(pagination._page, pagination._limit);
         return () => {
             dispatch(employeeActions.clearEmployee());
         };
@@ -63,6 +62,15 @@ const EmployeePage: React.FC = () => {
     const [mode, setMode] = React.useState(FORM_MODE.ADD);
     const [defaultValue, setDefaultValue] = React.useState<IEmployee | null>(null);
     const { openConfirm, confirm, closeConfirm } = useConfirmHook();
+
+    const handleFetchEmployee = (page: number, limit: number) => {
+        // dispatch(employeeActions.clearEmployee());
+        const listParams = {
+            _page: page,
+            _limit: limit,
+        };
+        dispatch(employeeActions.fetchEmployeeList(listParams));
+    };
 
     const handleClickOpenDialog = (employeeData: IEmployee | null) => {
         if (employeeData === null) {
@@ -107,6 +115,8 @@ const EmployeePage: React.FC = () => {
                 loading={loading}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
+                pagination={pagination}
+                handleFetch={handleFetchEmployee}
             ></CustomAppTable>
             <AddEditEmployeeDialog
                 open={openDialog}
