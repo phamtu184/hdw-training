@@ -81,12 +81,15 @@ const EmployeePage: React.FC = () => {
         setDefaultValue(data);
     };
     const handleDelete = (data: IEmployee) => {
+        const param = {
+            data,
+            callback: closeConfirm,
+        };
         const payload = {
             title: 'Delete',
             content: `Are you sure to delete ${data.name} employee?`,
             onOk: () => {
-                dispatch(employeeActions.deleteEmployee(data));
-                closeConfirm();
+                dispatch(employeeActions.deleteEmployee(param));
             },
             onCancel: closeConfirm,
         };

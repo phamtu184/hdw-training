@@ -1,8 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import employeeApi from 'api/employeeApi';
 import { IEmployee, IListParams, IListResponse } from 'interface';
-import { call, delay, put, takeLatest } from 'redux-saga/effects';
-import { employeeActions } from './employeeSlice';
+import { call, cps, delay, put, takeLatest } from 'redux-saga/effects';
+import { employeeActions, IPayloadEmployeeCallback } from './employeeSlice';
 
 function* fetchEmployeeList(action: PayloadAction<IListParams>) {
     yield delay(1000);
@@ -25,11 +25,12 @@ function* addEmployee(action: PayloadAction<IEmployee>) {
     yield put(employeeActions.closeEmployeeDialog());
 }
 
-function* deleteEmployee(action: PayloadAction<IEmployee>) {
+function* deleteEmployee(action: PayloadAction<IPayloadEmployeeCallback>) {
     yield delay(1000);
     try {
-        yield call(employeeApi.remove, action.payload?.id ?? '');
-        yield put(employeeActions.deleteEmployeeSuccess(action.payload));
+        yield call(employeeApi.remove, action.payload.data?.id ?? '');
+        yield put(employeeActions.deleteEmployeeSuccess(action.payload.data));
+        yield cps(action.payload.callback);
     } catch (error: any) {
         yield put(employeeActions.deleteEmployeeFail(error));
     }

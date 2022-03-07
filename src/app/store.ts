@@ -14,7 +14,7 @@ export const store = configureStore({
         auth: authReducer,
         employee: employeeReducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(sagaMiddleware),
 });
 sagaMiddleware.run(rootSaga);
 export type AppDispatch = typeof store.dispatch;

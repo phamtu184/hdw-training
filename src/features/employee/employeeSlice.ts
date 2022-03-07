@@ -18,7 +18,10 @@ const initialState: IEmployeeState = {
         _total: 0,
     },
 };
-
+export interface IPayloadEmployeeCallback {
+    data: IEmployee;
+    callback: () => void;
+}
 export const employeeSlice = createSlice({
     name: 'employee',
     initialState,
@@ -44,7 +47,7 @@ export const employeeSlice = createSlice({
         addEmployeeFail(state, _action: PayloadAction<IResponseData>) {
             state.loading = false;
         },
-        deleteEmployee(state, _action: PayloadAction<IEmployee>) {
+        deleteEmployee(state, _action: PayloadAction<IPayloadEmployeeCallback>) {
             state.loading = true;
         },
         deleteEmployeeSuccess(state, action: PayloadAction<IEmployee>) {
