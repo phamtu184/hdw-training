@@ -8,6 +8,7 @@ import { store } from './app/store';
 import { Provider } from 'react-redux';
 import { CssBaseline } from '@mui/material';
 import NavigateSetter from 'routes/NavigateSetter';
+import Notify from 'components/Notify';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -15,6 +16,7 @@ ReactDOM.render(
             <BrowserRouter>
                 <NavigateSetter />
                 <CssBaseline />
+                <Notify />
                 <App />
             </BrowserRouter>
         </Provider>

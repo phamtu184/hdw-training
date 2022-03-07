@@ -6,13 +6,19 @@ import { LoginFormValues } from 'validationForm/loginSchema';
 import { authActions } from './authSlice';
 import History from 'routes/history';
 import { IResponseData } from 'interface';
+import { appActions } from 'features/app/appSlice';
 
 function* handleLogin(payload: LoginFormValues) {
     try {
+        yield delay(1000);
         const response: IUser = yield call(authApi.login, payload);
         localStorage.setItem('access_token', response.access_token);
         yield put(authActions.loginSuccess(response));
-        History.push('/');
+        const payloadNotify = {
+            severity: 'success' as const,
+            content: `Login success, welcome back`,
+        };
+        yield put(appActions.showNotify(payloadNotify));
     } catch (err: any) {
         yield put(authActions.loginFail(err));
     }
