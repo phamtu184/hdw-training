@@ -21,7 +21,7 @@ interface Column {
     format?: (value: number) => string;
 }
 const columns: Column[] = [
-    { id: 'id', label: 'id', minWidth: 50 },
+    { id: 'index', label: 'Index', minWidth: 50 },
     { id: 'name', label: 'Name', minWidth: 150 },
     {
         id: 'gender',

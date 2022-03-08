@@ -6,7 +6,7 @@ import { call, cps, delay, put, takeLatest } from 'redux-saga/effects';
 import { employeeActions, IPayloadEmployeeCallback } from './employeeSlice';
 
 function* fetchEmployeeList(action: PayloadAction<IListParams>) {
-    yield delay(1000);
+    yield delay(500);
     try {
         const response: IListResponse<IEmployee> = yield call(employeeApi.fetch, action.payload);
         yield put(employeeActions.fetchEmployeeListSuccess(response));
@@ -16,7 +16,7 @@ function* fetchEmployeeList(action: PayloadAction<IListParams>) {
 }
 
 function* addEmployee(action: PayloadAction<IEmployee>) {
-    yield delay(1000);
+    yield delay(500);
     try {
         const response: IEmployee = yield call(employeeApi.add, action.payload);
         yield put(employeeActions.addEmployeeSuccess(response));
@@ -32,7 +32,7 @@ function* addEmployee(action: PayloadAction<IEmployee>) {
 }
 
 function* deleteEmployee(action: PayloadAction<IPayloadEmployeeCallback>) {
-    yield delay(1000);
+    yield delay(500);
     try {
         yield call(employeeApi.remove, action.payload.data?.id ?? '');
         yield put(employeeActions.deleteEmployeeSuccess(action.payload.data));
@@ -48,7 +48,7 @@ function* deleteEmployee(action: PayloadAction<IPayloadEmployeeCallback>) {
 }
 
 function* editEmployee(action: PayloadAction<IEmployee>) {
-    yield delay(1000);
+    yield delay(500);
     try {
         yield call(employeeApi.update, action.payload);
         yield put(employeeActions.editEmployeeSuccess(action.payload));

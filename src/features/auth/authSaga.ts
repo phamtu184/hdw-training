@@ -10,7 +10,7 @@ import { appActions } from 'features/app/appSlice';
 
 function* handleLogin(payload: LoginFormValues) {
     try {
-        yield delay(1000);
+        yield delay(500);
         const response: IUser = yield call(authApi.login, payload);
         localStorage.setItem('access_token', response.access_token);
         yield put(authActions.loginSuccess(response));
@@ -47,7 +47,7 @@ function* handleCheckAuth() {
     try {
         const action: PayloadAction = yield take(authActions.checkAuth.type);
         const infoUser: IResponseData = yield call(authApi.checkAuth, action.payload);
-        yield delay(1000);
+        yield delay(500);
         yield put(authActions.checkAuthSuccess(infoUser.data));
 
         yield take(authActions.logout.type);

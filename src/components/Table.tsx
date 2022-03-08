@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {
+    Box,
     IconButton,
+    LinearProgress,
     Pagination,
     Paper,
     Table,
@@ -65,6 +67,11 @@ const CustomAppTable: React.FC<Props> = ({
     return (
         <>
             <Paper sx={{ width: '100%', overflow: 'hidden', my: 2 }}>
+                {loading && (
+                    <Box sx={{ width: '100%' }}>
+                        <LinearProgress />
+                    </Box>
+                )}
                 <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
@@ -77,28 +84,35 @@ const CustomAppTable: React.FC<Props> = ({
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row, index) => {
+                            {rows.map((row, indexRow) => {
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                                        {columns.map((column, index) => {
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={indexRow}>
+                                        {columns.map((column, indexCol) => {
                                             const value = row[column.id];
+                                            if (column.id === 'index') {
+                                                return (
+                                                    <TableCell key={indexCol} align={column.align}>
+                                                        {(indexRow + 1) * _page}
+                                                    </TableCell>
+                                                );
+                                            }
                                             if (column.id === 'birthDate') {
                                                 return (
-                                                    <TableCell key={index} align={column.align}>
+                                                    <TableCell key={indexCol} align={column.align}>
                                                         {moment(value).format('DD/MM/YYYY')}
                                                     </TableCell>
                                                 );
                                             }
                                             if (column.id === 'salary') {
                                                 return (
-                                                    <TableCell key={index} align={column.align}>
+                                                    <TableCell key={indexCol} align={column.align}>
                                                         {moneyFormatter(value)}
                                                     </TableCell>
                                                 );
                                             }
                                             if (column.id === 'actions') {
                                                 return (
-                                                    <TableCell key={index} align={column.align}>
+                                                    <TableCell key={indexCol} align={column.align}>
                                                         <IconButton color="primary" onClick={() => handleEdit(row)}>
                                                             <EditOutlined />
                                                         </IconButton>
@@ -109,7 +123,7 @@ const CustomAppTable: React.FC<Props> = ({
                                                 );
                                             }
                                             return (
-                                                <TableCell key={index} align={column.align}>
+                                                <TableCell key={indexCol} align={column.align}>
                                                     {value}
                                                 </TableCell>
                                             );
